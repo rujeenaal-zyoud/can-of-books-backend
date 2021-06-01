@@ -65,7 +65,7 @@ rujeena.save();
  //bookCollection();
 
 
-
+//know get the data from Mongo DB and send it to render in front end
 // localhost:3001/books?email=rujeenaalzoud@gmail.com
 function getUser(request, response)  {
   
@@ -82,16 +82,67 @@ function getUser(request, response)  {
  
 
 }
+//add new data books to MongoDB and render it in front end 
+function addBook(request,response){
+  console.log(request.body);
+  const { name, imageUrl,description,status,email } = req.body;
 
+  user.find({ email: email }, (error, ownerData) => {
+    if(error) {response.send('not Working')}
+    else{
+      console.log('before pushing',ownerData[0])
+
+    ownerData[0].books.push({
+        name: name,
+        description: description,
+        status:status,
+        email:email,
+        imageUrl:imageUrl
+    })
+    ownerData[0].save();
+    res.send(ownerData[0].books);
+  }
+});
+
+}
+
+
+
+function deleteBooks(request, response) {
+ 
+  const index = Number(request.params.index);
+ 
+  
+  const { email} = req.query;
+  
+ user.find({email: email}, (err, ownerData) => {
+      
+try {
+  const newBookArr = ownerData[0].books.filter((books, idx) => {
+    return idx !== index
+});
+ownerData[0].books = newBookArr;
+ownerData[0].save();
+res.send(ownerData[0].books);
+} catch (error) {
+  console.log(error);
+}
+if (err) {res.send(`YOU GOT AN ERROR! your error: ${err}`)};  
+
+     
+  });
+}
 
 
 app.get('/',  pageHandler) ;
 function pageHandler(request,response){
-response.send("uyftrd")
+response.send("hello-from-backend")
 }
 
-app.get('/books', getUser);
 
+app.post('/addbooks',addBook);
+app.get('/books', getUser);
+app.delete('/books/:index', deleteBooks);
 
 app.listen(PORT, () => console.log(`listening on ${PORT}`));
 
