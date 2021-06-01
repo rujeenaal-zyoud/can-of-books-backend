@@ -18,7 +18,7 @@
 const mongoose = require('mongoose');
 
 const bookSchema = new mongoose.Schema({
-//    image=String,
+     imageUrl : String,
     name: String,
     description: String,
     status: String
@@ -32,6 +32,6 @@ const bookSchema = new mongoose.Schema({
 
 
 const user = mongoose.model('user', UserSchema);
-const book = mongoose.model('book',  bookSchema);
+//const book = mongoose.model('book',  bookSchema);
 
 module.exports=user;
