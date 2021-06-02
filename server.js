@@ -8,6 +8,8 @@ require('dotenv').config();
 const user=require('./module/user');
 const app = express();
 app.use(cors());
+app.use(express.json());
+
 
 const PORT = process.env.PORT;
 
@@ -62,7 +64,7 @@ const zainab = new user({
 zainab.save();
 rujeena.save();
    }
- //bookCollection();
+ bookCollection();
 
 
 //know get the data from Mongo DB and send it to render in front end
@@ -84,8 +86,8 @@ function getUser(request, response)  {
 }
 //add new data books to MongoDB and render it in front end 
 function addBook(request,response){
-  console.log(request.body);
-  const { name, imageUrl,description,status,email } = req.body;
+  console.log(request,'gr');
+  const { name, imageUrl,description,status,email } = request.body;
 
   user.find({ email: email }, (error, ownerData) => {
     if(error) {response.send('not Working')}
@@ -100,7 +102,7 @@ function addBook(request,response){
         imageUrl:imageUrl
     })
     ownerData[0].save();
-    res.send(ownerData[0].books);
+    response.send(ownerData[0]);
   }
 });
 
@@ -113,7 +115,7 @@ function deleteBooks(request, response) {
   const index = Number(request.params.index);
  
   
-  const { email} = req.query;
+  const { email} = request.query;
   
  user.find({email: email}, (err, ownerData) => {
       
@@ -123,11 +125,11 @@ try {
 });
 ownerData[0].books = newBookArr;
 ownerData[0].save();
-res.send(ownerData[0].books);
+response.send(ownerData[0].books);
 } catch (error) {
   console.log(error);
 }
-if (err) {res.send(`YOU GOT AN ERROR! your error: ${err}`)};  
+if (err) {response.send(`YOU GOT AN ERROR! your error: ${err}`)};  
 
      
   });
@@ -142,7 +144,7 @@ response.send("hello-from-backend")
 
 app.post('/addbooks',addBook);
 app.get('/books', getUser);
-app.delete('/books/:index', deleteBooks);
+app.delete('/deletebooks/:index', deleteBooks);
 
 app.listen(PORT, () => console.log(`listening on ${PORT}`));
 
