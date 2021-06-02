@@ -135,6 +135,29 @@ if (err) {response.send(`YOU GOT AN ERROR! your error: ${err}`)};
   });
 }
 
+/// 
+function updateBook(request, response) {
+  const index = Number(request.params.id);
+  
+  const { nameA, descriptionA, statusA, emailA, imageA } = request.body;
+  userModel.findOne({ email: emailA }, (error, ownerData) => {
+      console.log(ownerData);
+      ownerData.book.splice(index, 1, {
+          name: nameA,
+          description: descriptionA,
+          status: statusA,
+          imageUrl : imageA
+
+      });
+
+        ownerData.save();
+      console.log(ownerData[16]);
+      
+      response.send(ownerData[16].book)
+
+  });
+}
+
 
 app.get('/',  pageHandler) ;
 function pageHandler(request,response){
@@ -142,6 +165,7 @@ response.send("hello-from-backend")
 }
 
 
+app.put('/updatebooks/:index', updateBook);
 app.post('/addbooks',addBook);
 app.get('/books', getUser);
 app.delete('/deletebooks/:index', deleteBooks);
