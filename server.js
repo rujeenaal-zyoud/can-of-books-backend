@@ -137,23 +137,23 @@ if (err) {response.send(`YOU GOT AN ERROR! your error: ${err}`)};
 
 /// 
 function updateBook(request, response) {
-  const index = Number(request.params.id);
+  const index = request.params.index
   
-  const { nameA, descriptionA, statusA, emailA, imageA } = request.body;
-  userModel.findOne({ email: emailA }, (error, ownerData) => {
+  const { name, description, status, email, image } = request.body;
+  user.findOne({ email: email }, (error, ownerData) => {
       console.log(ownerData);
-      ownerData.book.splice(index, 1, {
-          name: nameA,
-          description: descriptionA,
-          status: statusA,
-          imageUrl : imageA
+      ownerData.books.splice(index, 1, {
+          name: name,
+          description: description,
+          status: status,
+          imageUrl : image
 
       });
 
         ownerData.save();
-      console.log(ownerData[16]);
+      console.log(ownerData);
       
-      response.send(ownerData[16].book)
+      response.send(ownerData.books)
 
   });
 }
