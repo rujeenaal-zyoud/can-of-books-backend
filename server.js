@@ -12,11 +12,12 @@ app.use(express.json());
 
 
 const PORT = process.env.PORT;
-
+//here becouse want to deploy URL in hreko 
+const MONGODB_URI = process.env.MONGODB_URI;
 
 // connect express server to mongodb server
 // so we can save data and get from mongoServer
-mongoose.connect('mongodb://localhost:27017/myFav3', {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(MONGODB_URI, {useNewUrlParser: true, useUnifiedTopology: true});
 
 // put data into schema
 
